@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>FSSM AMEKSA</title>
+</head>
+
+<body>
+    <div class="wrapper" id="wrapper">
+        <div class="sidebar">
+            <div>
+                <h2>Quiz de Révision</h2>
+                <div id="countdown" class="timer">20:00</div>
+                <div class="instructions">
+                    <p>🎯 Testez vos connaissances avec le Quiz de Révision ! 🚀</p>
+                    <p>⚠️ Règles Importantes :</p>
+                    <p><strong>❌ Après 20 minutes </strong> , la plateforme soumettra automatiquement vos réponses !
+                        soit vous avez terminé, ou non.</p>
+                    <p>Si <strong>vous naviguez</strong> hors de cette page, votre <strong>score sera pénalisé</strong>
+                        et fixé à 0.</p>
+                </div>
+            </div>
+            <div>
+                <img src="logoAm.png" alt="">
+                <p>&copy; 2025 Pr. Mohammed AMEKSA</p>
+            </div>
+        </div>
+        <!-- Main Content: Google Form -->
+        <div class="main-content" id="formContainer">
+            <div class="instructions" style="text-align:center;">
+                <h1>Bienvenue à la session de révision</h1>
+                <h2>Groupe 2 - SMI S6 - 2024/2025</h2>
+                <div class="note-card">
+                    <div class="icon">⚠️</div>
+                    <div class="content">
+                        <p>Au bout de <strong> 20 minutes </strong>, le test sera terminé soit vous avez terminé, ou
+                            non.</p>
+                        <p>Si <strong>vous naviguez</strong> hors de cette page, votre <strong>score sera
+                                pénalisé</strong> et fixé à 0.</p>
+                    </div>
+                </div>
+                <p>Veuillez cliquer sur le bouton ci-dessous pour commençer le test en mode plein écran.</p>
+                <button class="button" id="fullscreenBtn">Start Quiz</button>
+            </h2>
+        </div>
+    </div>
+
+    <script>
+       function requestFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        let totalTime = 20 * 60;
+        let interval;
+
+        function startCountdown() {
+            const countdownElem = document.getElementById('countdown');
+            interval = setInterval(function () {
+                const minutes = Math.floor(totalTime / 60);
+                let seconds = totalTime % 60;
+                if (seconds < 10) seconds = "0" + seconds;
+                countdownElem.textContent = minutes + ":" + seconds;
+                totalTime--;
+                if (totalTime < 0) {
+                    clearInterval(interval);
+                    handleTimeUp();
+                }
+            }, 1000);
+        }
+
+        let penaltyApplied = false;
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden && !penaltyApplied) {
+                penaltyApplied = true;
+                handlePenalty();
+            }
+        });
+
+        function handlePenalty() {
+            clearFormContainerAndDisplayMessage("Vous avez quitté l'examen. Votre score sera fixé à 0.");
+        }
+
+        function handleTimeUp() {
+            // Display a message when the time is up
+            clearFormContainerAndDisplayMessage("Le temps est écoulé ! Votre examen a été soumis.");
+        }
+
+        function clearFormContainerAndDisplayMessage(message) {
+            const formContainer = document.getElementById('wrapper');
+            if (formContainer) {
+                formContainer.innerHTML = '';
+                // Display a sample message
+                const messageElement = document.createElement('div');
+                messageElement.style.textAlign = 'center';
+                messageElement.style.fontSize = '24px';
+                messageElement.style.marginTop = '50px';
+                messageElement.textContent = message;
+                formContainer.appendChild(messageElement);
+            }
+        }
+
+        function displayExam() {
+            var htmlCode = '<iframe id="examFrame" class="iframe-container" src="https://docs.google.com/forms/d/e/1FAIpQLSfcnsmKK4_yjgDGPY0cCcWetRIz8TSCLn6SH4SOFaEafm8CpQ/viewform?embedded=true"></iframe>';
+            //https://docs.google.com/forms/d/e/1FAIpQLSfcnsmKK4_yjgDGPY0cCcWetRIz8TSCLn6SH4SOFaEafm8CpQ/viewform?usp=dialog
+            var element = document.getElementById('formContainer');
+            element.innerHTML = htmlCode;
+        }
+
+        btn = document.getElementById('fullscreenBtn');
+        btn.addEventListener("click", requestFullscreen);
+        btn.addEventListener("click", displayExam);
+        btn.addEventListener("click", startCountdown);
+    </script>
+</body>
+
+</html>
